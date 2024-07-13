@@ -5,11 +5,10 @@ from yaspin import yaspin
 from gepetto import bot_factory
 
 
-def main():
+def main(model="gpt-4o", vendor=""):
     start_time = datetime.datetime.now()
     total_cost = 0
-    model = "gpt-4o"
-    bot = bot_factory.get_bot(model=model)
+    bot = bot_factory.get_bot(model=model, vendor=vendor)
     messages = [
         {
             "role": "system",
@@ -34,5 +33,7 @@ def main():
 if __name__ == "__main__":
     argp = argparse.ArgumentParser()
     argp.add_argument("--example", type=str, default="", help="An option")
+    argp.add_argument("--model", type=str, default="gpt-4o", help="The LLM model to use")
+    argp.add_argument("--vendor", type=str, default="", help="The LLM vendor to use (not needed for openai/anthropic models)")
     args = argp.parse_args()
-    main()
+    main(model=args.model, vendor=args.vendor)
