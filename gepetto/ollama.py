@@ -5,10 +5,17 @@ from gepetto.response import ChatResponse, FunctionResponse
 
 class OllamaModel():
     name = "Servalan"
-    def get_token_price(self, token_count, direction="output", model_engine="dolphin-mistral"):
+
+    def __init__(self, model=None):
+        if model is None:
+            self.model = "dolphin-mistral"
+        else:
+            self.model = model
+
+    def get_token_price(self, token_count, direction="output", model_engine=None):
         return 0
 
-    async def chat(self, messages, temperature=1.1, model="dolphin-mistral"):
+    async def chat(self, messages, temperature=1.1, model=None):
         """Chat with the model.
 
         Args:
@@ -20,6 +27,8 @@ class OllamaModel():
             tokens: The number of tokens used.
             cost: The estimated cost of the request.
         """
+        if model is None:
+            model = self.model
         client = OpenAI(
             base_url = 'http://host.docker.internal:11434/v1',
             api_key='ollama', # required, but unused
@@ -41,10 +50,17 @@ class OllamaModel():
 
 class OllamaModelSync():
     name = "Servalan"
-    def get_token_price(self, token_count, direction="output", model_engine="dolphin-mistral"):
+
+    def __init__(self, model=None):
+        if model is None:
+            self.model = "dolphin-mistral"
+        else:
+            self.model
+
+    def get_token_price(self, token_count, direction="output", model_engine=None):
         return 0
 
-    def chat(self, messages, temperature=1.1, model="dolphin-mistral"):
+    def chat(self, messages, temperature=1.1, model=None):
         """Chat with the model.
 
         Args:
@@ -56,6 +72,8 @@ class OllamaModelSync():
             tokens: The number of tokens used.
             cost: The estimated cost of the request.
         """
+        if model is None:
+            model = self.model
         client = OpenAI(
             base_url = 'http://localhost:11434/v1',
             api_key='ollama', # required, but unused
@@ -72,5 +90,5 @@ class OllamaModelSync():
         message = str(response.choices[0].message.content)
         return ChatResponse(message, tokens, cost, model)
 
-    def function_call(self, messages = [], tools = [], temperature=0.7, model="mistralai/Mistral-7B-Instruct-v0.1"):
+    def function_call(self, messages = [], tools = [], temperature=0.7, model=None):
         raise NotImplementedError

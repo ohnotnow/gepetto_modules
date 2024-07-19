@@ -5,10 +5,17 @@ from gepetto.response import ChatResponse, FunctionResponse
 
 class AnyscaleModel():
     name = "Minxie"
-    def get_token_price(self, token_count, direction="output", model_engine="mistralai/Mixtral-8x7B-Instruct-v0.1"):
+
+    def __init__(self, model=None):
+        if model is None:
+            self.model = "mistralai/Mixtral-8x7B-Instruct-v0.1"
+        else:
+            self.model = model
+
+    def get_token_price(self, token_count, direction="output", model_engine=None):
         return (0.50 / 1000000) * token_count
 
-    async def chat(self, messages, temperature=0.7, model="mistralai/Mixtral-8x7B-Instruct-v0.1"):
+    async def chat(self, messages, temperature=0.7, model=None):
         """Chat with the model.
 
         Args:
@@ -20,6 +27,8 @@ class AnyscaleModel():
             tokens: The number of tokens used.
             cost: The estimated cost of the request.
         """
+        if model is None:
+            model = self.model
         api_key = os.getenv("ANYSCALE_API_KEY")
         api_base = os.getenv("ANYSCALE_BASE_URL")
         client = OpenAI(api_key=api_key, base_url=api_base)
@@ -34,7 +43,9 @@ class AnyscaleModel():
         message = str(response.choices[0].message.content)
         return ChatResponse(message, tokens, cost, model)
 
-    async def function_call(self, messages = [], tools = [], temperature=0.7, model="mistralai/Mistral-7B-Instruct-v0.1"):
+    async def function_call(self, messages = [], tools = [], temperature=0.7, model=None):
+        if model is None:
+            model = self.model
         api_key = os.getenv("ANYSCALE_API_KEY")
         api_base = os.getenv("ANYSCALE_BASE_URL")
         client = OpenAI(api_key=api_key, base_url=api_base)
@@ -53,10 +64,17 @@ class AnyscaleModel():
 
 class AnyscaleModelSync():
     name = "Minxie"
-    def get_token_price(self, token_count, direction="output", model_engine="mistralai/Mixtral-8x7B-Instruct-v0.1"):
+
+    def __init__(self, model=None):
+        if model is None:
+            self.model = "mistralai/Mixtral-8x7B-Instruct-v0.1"
+        else:
+            self.model = model
+
+    def get_token_price(self, token_count, direction="output", model_engine=None):
         return (0.50 / 1000000) * token_count
 
-    def chat(self, messages, temperature=0.7, model="mistralai/Mixtral-8x7B-Instruct-v0.1"):
+    def chat(self, messages, temperature=0.7, model=None):
         """Chat with the model.
 
         Args:
@@ -68,6 +86,8 @@ class AnyscaleModelSync():
             tokens: The number of tokens used.
             cost: The estimated cost of the request.
         """
+        if model is None:
+            model = self.model
         api_key = os.getenv("ANYSCALE_API_KEY")
         api_base = os.getenv("ANYSCALE_BASE_URL")
         client = OpenAI(api_key=api_key, base_url=api_base)
@@ -82,7 +102,9 @@ class AnyscaleModelSync():
         message = str(response.choices[0].message.content)
         return ChatResponse(message, tokens, cost, model)
 
-    def function_call(self, messages = [], tools = [], temperature=0.7, model="mistralai/Mistral-7B-Instruct-v0.1"):
+    def function_call(self, messages = [], tools = [], temperature=0.7, model=None):
+        if model is None:
+            model = self.model
         api_key = os.getenv("ANYSCALE_API_KEY")
         api_base = os.getenv("ANYSCALE_BASE_URL")
         client = OpenAI(api_key=api_key, base_url=api_base)

@@ -12,7 +12,16 @@ class Model(Enum):
 
 class ClaudeModel():
     name = "Minxie"
-    def get_token_price(self, token_count, direction="output", model_engine="claude-3-haiku-20240307"):
+
+    def __init__(self, model=None):
+        if model is None:
+            self.model = Model.CLAUDE_3_HAIKU.value[0]
+        else:
+            self.model = model
+
+    def get_token_price(self, token_count, direction="output", model_engine=None):
+        if model_engine is None:
+            model_engine = self.model
         token_price_input = 0
         token_price_output = 0
         for model in Model:
@@ -24,7 +33,7 @@ class ClaudeModel():
             return round(token_price_input * token_count, 4)
         return round(token_price_output * token_count, 4)
 
-    async def chat(self, messages, temperature=0.7, model="claude-3-haiku-20240307"):
+    async def chat(self, messages, temperature=0.7, model=None):
         """Chat with the model.
 
         Args:
@@ -36,6 +45,8 @@ class ClaudeModel():
             tokens: The number of tokens used.
             cost: The estimated cost of the request.
         """
+        if model is None:
+            model = self.model
         api_key = os.getenv("CLAUDE_API_KEY")
         client = anthropic.Anthropic(
             api_key=api_key,
@@ -65,7 +76,16 @@ class ClaudeModel():
 
 class ClaudeModelSync():
     name = "Screener"
-    def get_token_price(self, token_count, direction="output", model_engine="claude-3-haiku-20240307"):
+
+    def __init__(self, model=None):
+        if model is None:
+            self.model = Model.CLAUDE_3_HAIKU.value[0]
+        else:
+            self.model = model
+
+    def get_token_price(self, token_count, direction="output", model_engine=None):
+        if model_engine is None:
+            model_engine = self.model
         token_price_input = 0
         token_price_output = 0
         for model in Model:
@@ -77,7 +97,7 @@ class ClaudeModelSync():
             return round(token_price_input * token_count, 4)
         return round(token_price_output * token_count, 4)
 
-    def chat(self, messages, temperature=0.7, model="claude-3-haiku-20240307"):
+    def chat(self, messages, temperature=0.7, model=None):
         """Chat with the model.
 
         Args:
@@ -89,6 +109,8 @@ class ClaudeModelSync():
             tokens: The number of tokens used.
             cost: The estimated cost of the request.
         """
+        if model is None:
+            model = self.model
         api_key = os.getenv("CLAUDE_API_KEY")
         client = anthropic.Anthropic(
             api_key=api_key,
@@ -107,7 +129,6 @@ class ClaudeModelSync():
             system=system_prompt,
             messages=claude_messages
         )
-        print(response.content)
         tokens = response.usage.input_tokens + response.usage.output_tokens
         cost = self.get_token_price(tokens, "output", model) + self.get_token_price(response.usage.input_tokens, "input", model)
         message = str(response.content[0].text)

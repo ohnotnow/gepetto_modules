@@ -28,7 +28,8 @@ def main():
             "content": "How do I make soup?"
         }
     ]
-    response = bot.chat(messages, model=model)
+    response = bot.chat(messages) # use the default model
+    response = bot.chat(messages, model="gpt-4o-mini") # override the model for this call
     print(response)
     # with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
     #     costs = executor.map(process_file, file_list, [a11y]*len(file_list), [responsive]*len(file_list), [css]*len(file_list), [model]*len(file_list))
