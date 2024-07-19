@@ -8,6 +8,7 @@ class Model(Enum):
     GPT4_32k = ('gpt-4-32k', 0.03, 0.06)
     GPT_4_1106_PREVIEW = ('gpt-4-1106-preview', 0.01, 0.03)
     GPT_4_TURBO = ('gpt-4-turbo', 0.01, 0.03)
+    GPT_4_OMNI_MINI = ('gpt-4o-mini', 0.000150, 0.000075)
     GPT_4_OMNI = ('gpt-4o', 0.005, 0.015)
     GPT4 = ('gpt-4', 0.06, 0.12)
     GPT3_5_Turbo_gpt_1106 = ('gpt-3.5-turbo-1106', 0.001, 0.002)
@@ -16,9 +17,18 @@ class Model(Enum):
 
 class GPTModel():
     name = "Gepetto"
-    def get_token_price(self, token_count, direction="output", model_engine="gpt-4o"):
+
+    def __init__(self, model=None):
+        if model is None:
+            self.model = Model.GPT_4_OMNI_MINI.value[0]
+        else:
+            self.model = model
+
+    def get_token_price(self, token_count, direction="output", model_engine=None):
         token_price_input = 0
         token_price_output = 0
+        if model_engine is None:
+            model_engine = self.model
         for model in Model:
             if model_engine.startswith(model.value[0]):
                 token_price_input = model.value[1] / 1000
@@ -28,7 +38,7 @@ class GPTModel():
             return round(token_price_input * token_count, 4)
         return round(token_price_output * token_count, 4)
 
-    async def chat(self, messages, temperature=1.8, model="gpt-4o", top_p=0.6):
+    async def chat(self, messages, temperature=1.8, model=None, top_p=0.6):
         """Chat with the model.
 
         Args:
@@ -40,6 +50,8 @@ class GPTModel():
             tokens: The number of tokens used.
             cost: The estimated cost of the request.
         """
+        if model is None:
+            model = self.model
         api_key = os.getenv("OPENAI_API_KEY")
         api_base = "https://api.openai.com/v1/"
         client = OpenAI(api_key=api_key, base_url=api_base)
@@ -59,7 +71,9 @@ class GPTModel():
         message = str(response.choices[0].message.content)
         return ChatResponse(message, tokens, cost, model)
 
-    async def function_call(self, messages = [], tools = [], temperature=0.7, model="gpt-4o"):
+    async def function_call(self, messages = [], tools = [], temperature=0.7, model=None):
+        if model is None:
+            model = self.model
         api_key = os.getenv("OPENAI_API_KEY")
         api_base = "https://api.openai.com/v1/"
         client = OpenAI(api_key=api_key, base_url=api_base)
@@ -78,7 +92,16 @@ class GPTModel():
 
 class GPTModelSync():
     name = "Gepetto"
-    def get_token_price(self, token_count, direction="output", model_engine="gpt-4o"):
+
+    def __init__(self, model=None):
+        if model is None:
+            self.model = Model.GPT_4_OMNI_MINI.value[0]
+        else:
+            self.model = model
+
+    def get_token_price(self, token_count, direction="output", model_engine=None):
+        if model_engine is None:
+            model_engine = self.model
         token_price_input = 0
         token_price_output = 0
         for model in Model:
@@ -90,7 +113,7 @@ class GPTModelSync():
             return round(token_price_input * token_count, 4)
         return round(token_price_output * token_count, 4)
 
-    def chat(self, messages, temperature=0.1, model="gpt-4o", top_p=1.0):
+    def chat(self, messages, temperature=0.1, model=None, top_p=1.0):
         """Chat with the model.
 
         Args:
@@ -102,6 +125,8 @@ class GPTModelSync():
             tokens: The number of tokens used.
             cost: The estimated cost of the request.
         """
+        if model is None:
+            model = self.model
         api_key = os.getenv("OPENAI_API_KEY")
         api_base = "https://api.openai.com/v1/"
         client = OpenAI(api_key=api_key, base_url=api_base)
@@ -121,7 +146,9 @@ class GPTModelSync():
         message = str(response.choices[0].message.content)
         return ChatResponse(message, tokens, cost, model)
 
-    def function_call(self, messages = [], tools = [], temperature=0.7, model="gpt-4o"):
+    def function_call(self, messages = [], tools = [], temperature=0.7, model=None):
+        if model is None:
+            model = self.model
         api_key = os.getenv("OPENAI_API_KEY")
         api_base = "https://api.openai.com/v1/"
         client = OpenAI(api_key=api_key, base_url=api_base)
