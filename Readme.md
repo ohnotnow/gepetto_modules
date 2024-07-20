@@ -21,8 +21,8 @@ The Puppet Module Generator is a command-line tool designed to help users create
 
 1. **Clone the repository**
     ```sh
-    git clone <GitHub Clone URL>
-    cd puppet-module-generator
+    git clone https://github.com/ohnotnow/puppet_creator
+    cd puppet_creator
     ```
 
 2. **Set up a virtual environment and install dependencies**
