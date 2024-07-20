@@ -63,6 +63,20 @@ python main.py --requirements-file path/to/module_requirements.txt
 python main.py
 ```
 
+#### Using different models:
+You can use different models and API providers if you like.  You will need to set the appropriate environment variables to access them, for instance :
+```sh
+export OPENAI_API_KEY=...
+export ANTHROPIC_API_KEY=...
+export ANYSCALE_API_KEY=...
+export GROQ_API_KEY=....
+```
+And then:
+```sh
+python main.py --model=claude-3-5-sonnet-20240620
+python main.py --model=llama3-70b-8192 --vendor=groq
+```
+
 ## Detailed Steps
 
 1. **Read Requirements**: Reads the requirements either from a file or manual input.
