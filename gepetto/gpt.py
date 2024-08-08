@@ -106,7 +106,7 @@ class GPTModelSync():
         token_price_input = 0
         token_price_output = 0
         for model in Model:
-            if model_engine.startswith(model.value[0]):
+            if model_engine ==model.value[0]:
                 token_price_input = model.value[1] / 1000
                 token_price_output = model.value[2] / 1000
                 break
@@ -114,7 +114,7 @@ class GPTModelSync():
             return round(token_price_input * token_count, 4)
         return round(token_price_output * token_count, 4)
 
-    def chat(self, messages, temperature=0.1, model=None, top_p=1.0):
+    def chat(self, messages, temperature=1.0, model=None, top_p=1.0):
         """Chat with the model.
 
         Args:
